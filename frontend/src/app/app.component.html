@@ -1,0 +1,96 @@
+<header>
+  <h1>Gestion de coordonnées GPS</h1>
+</header>
+<main>
+  <section class="calcul-distance">
+    <h2>Distance entre 2 points</h2>
+    <form [formGroup]="calculDistanceForm" (ngSubmit)="onCalculerDistance()">
+      <fieldset>
+        <legend>Calcul de la distance entre 2 coordonnées GPS</legend>
+        <p>
+          Point A : &nbsp;
+          <input
+            formControlName="latitudePointA"
+            type="number"
+            placeholder="Entrer la latitude"
+            required
+          />
+          &nbsp;
+          <input
+            formControlName="longitudePointA"
+            type="number"
+            placeholder="Entrer la longitude"
+            required
+          />
+        </p>
+        <p>
+          Point B : &nbsp;
+          <input
+            formControlName="latitudePointB"
+            type="number"
+            placeholder="Entrer la latitude"
+            required
+          />
+          &nbsp;
+          <input
+            formControlName="longitudePointB"
+            type="number"
+            placeholder="Entrer la longitude"
+            required
+          />
+        </p>
+
+        @if (distance && distance > 10) {
+        <p class="plus-de-10km">Ces deux point sont situés à plus de 10km l'un de l'autre. <br /> Distance = {{distance}} km</p>
+        }@else if (distance && distance < 10) {
+        <p class="moins-de-10km">Ces deux point sont situés à plus de 10km l'un de l'autre. <br />Distance = {{distance}} km</p>
+        }
+        <div>
+          <button type="submit" [disabled]="calculDistanceForm.invalid">Calculer la distance</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+
+  <section class="liste-coordonnees">
+    <h2>Liste des coordonnées GPS dans le système</h2>
+    <div>
+      <form [formGroup]="ajoutCoordonneesGpsForm" (ngSubmit)="onAjouterCoordonneesGps()">
+        <input type="number" placeholder="Entrer la latitude" formControlName="latitude" required />
+        <input type="number" placeholder="Entrer la longitude" formControlName="longitude" required/>
+        <button type="submit" [disabled]="ajoutCoordonneesGpsForm.invalid">Ajouter</button> <span>&nbsp;</span>
+      </form>
+
+      <div class="tableau">
+        @if(!listeCoordonneesGps ){
+        <p>Il n'existe aucune coordonnée enregistrée dans le système.</p>
+        }@else {
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>LATITUDE</th>
+              <th>LONGITUDE</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (coord of listeCoordonneesGps; track coord.id) {
+            <tr>
+              <td>{{ coord.id }}</td>
+              <td>{{ coord.latitude }}</td>
+              <td>{{ coord.longitude }}</td>
+              <td>
+                <button (click)="onSupprimerCoordonneesGps(coord.id)">Supprimer</button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+        }
+      </div>
+    </div>
+  </section>
+</main>
+
+<router-outlet></router-outlet>
